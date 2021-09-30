@@ -31,11 +31,25 @@ class PlayerFragment: Fragment(R.layout.fragment_player) {
         val fragmentPlayerBinding = FragmentPlayerBinding.bind(view)
         binding = fragmentPlayerBinding
 
+        initPlayLIstBtn(fragmentPlayerBinding)
+
+
         getVideoListFromServer()
 
     }
 
 
+
+    private fun initPlayLIstBtn(fragmentPlayerBinding: FragmentPlayerBinding) {
+        fragmentPlayerBinding.playListImg.setOnClickListener{
+//            todo 만약에 서버에서 데이터가 다 불려오지 않았을 때
+
+            fragmentPlayerBinding.playerViewGroup.isVisible = isWatchingPlayListView
+            fragmentPlayerBinding.playerListViewGroup.isVisible = !isWatchingPlayListView
+
+            isWatchingPlayListView = !isWatchingPlayListView
+        }
+    }
 
     private fun getVideoListFromServer() {
         val retrofit = Retrofit.Builder()
