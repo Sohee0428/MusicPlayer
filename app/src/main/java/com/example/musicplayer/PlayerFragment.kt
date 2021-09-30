@@ -31,14 +31,68 @@ class PlayerFragment: Fragment(R.layout.fragment_player) {
         val fragmentPlayerBinding = FragmentPlayerBinding.bind(view)
         binding = fragmentPlayerBinding
 
+        initPlayView(fragmentPlayerBinding)
         initPlayLIstBtn(fragmentPlayerBinding)
-
+        initPlayControlBtn(fragmentPlayerBinding)
+        initRecyclerView(fragmentPlayerBinding)
 
         getVideoListFromServer()
 
     }
 
+    private fun initPlayControlBtn(fragmentPlayerBinding: FragmentPlayerBinding) {
+        fragmentPlayerBinding.playControlImg.setOnClickListener{
+            val player = this.player ?: return@setOnClickListener
 
+            if (player.isPlaying){
+                player.pause()
+            } else {
+                player.play()
+            }
+        }
+
+        fragmentPlayerBinding.skipNextImg.setOnClickListener {
+
+        }
+
+        fragmentPlayerBinding.skipPrevImg.setOnClickListener {
+
+        }
+    }
+
+    private fun initPlayView(fragmentPlayerBinding: FragmentPlayerBinding) {
+        context?.let {
+            player = SimpleExoPlayer.Builder(it).build()
+        }
+
+        fragmentPlayerBinding.playerView.player = player
+
+        binding?.let {
+
+            player?.addListener(object : Player.EventListener {
+
+                override fun onIsPlayingChanged(isPlaying: Boolean) {
+                    super.onIsPlayingChanged(isPlaying)
+
+                    if(isPlaying) {
+                        it.playControlImg.setImageResource(R.drawable.ic_baseline_pause_24)
+                    } else {
+                        it.playControlImg.setImageResource(R.drawable.ic_baseline_play_arrow_24)
+                    }
+                }
+            })
+        }
+    }
+
+    private fun initRecyclerView(fragmentPlayerBinding: FragmentPlayerBinding) {
+        playListAdapter = PlayListAdapter {
+//            todo 음악을 재생
+        }
+        fragmentPlayerBinding.playListRecyclerView.apply {
+            adapter = playListAdapter
+            layoutManager = LinearLayoutManager(context)
+        }
+    }
 
     private fun initPlayLIstBtn(fragmentPlayerBinding: FragmentPlayerBinding) {
         fragmentPlayerBinding.playListImg.setOnClickListener{
