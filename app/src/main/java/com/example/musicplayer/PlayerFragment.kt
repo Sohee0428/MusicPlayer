@@ -21,9 +21,9 @@ import retrofit2.converter.gson.GsonConverterFactory
 class PlayerFragment: Fragment(R.layout.fragment_player) {
 
     private var binding: FragmentPlayerBinding? = null
-    private var isWatchingPlayListView = true
     private lateinit var playListAdapter: PlayListAdapter
     private var player: SimpleExoPlayer? = null
+    private var model: PlayerModel = PlayerModel()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -96,12 +96,13 @@ class PlayerFragment: Fragment(R.layout.fragment_player) {
 
     private fun initPlayLIstBtn(fragmentPlayerBinding: FragmentPlayerBinding) {
         fragmentPlayerBinding.playListImg.setOnClickListener{
-//            todo 만약에 서버에서 데이터가 다 불려오지 않았을 때
 
-            fragmentPlayerBinding.playerViewGroup.isVisible = isWatchingPlayListView
-            fragmentPlayerBinding.playerListViewGroup.isVisible = !isWatchingPlayListView
+            if (model.currentPosition == -1) return@setOnClickListener
 
-            isWatchingPlayListView = !isWatchingPlayListView
+            fragmentPlayerBinding.playerViewGroup.isVisible = model.isWatchingPlayListView
+            fragmentPlayerBinding.playerListViewGroup.isVisible = !model.isWatchingPlayListView
+
+            model.isWatchingPlayListView = !model.isWatchingPlayListView
         }
     }
 
@@ -121,13 +122,12 @@ class PlayerFragment: Fragment(R.layout.fragment_player) {
                         ) {
                             Log.d("PlayerFragment", "${response.body()}")
 
-                            response.body()?.let {
-                                val modelList = it.musics.mapIndexed { index, musicEntity ->
-                                    musicEntity.mapper(index.toLong())
-                                }
+                            response.body()?.let {  musicDto ->
 
+                                model = musicDto.mapper()
 
-                                playListAdapter.submitList(modelList)
+                                setMusicList(model.getAdapterModels())
+                                playListAdapter.submitList(model.getAdapterModels())
                             }
                         }
 
