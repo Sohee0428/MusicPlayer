@@ -138,5 +138,17 @@ class PlayerFragment: Fragment(R.layout.fragment_player) {
             }
     }
 
+    private fun setMusicList(modelList: List<MusicModel>) {
+        context?.let {
+            player?.addMediaItems(modelList.map { musicModel ->
+                MediaItem.Builder()
+                    .setMediaId(musicModel.id.toString())
+                    .setUri(musicModel.streamUrl)
+                    .build()
+            })
+
+            player?.prepare()
+        }
+    }
 
 }
