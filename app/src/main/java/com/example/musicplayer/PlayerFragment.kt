@@ -82,6 +82,15 @@ class PlayerFragment: Fragment(R.layout.fragment_player) {
                         it.playControlImg.setImageResource(R.drawable.ic_baseline_play_arrow_24)
                     }
                 }
+
+                override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
+                    super.onMediaItemTransition(mediaItem, reason)
+
+                    val newIndex = mediaItem?.mediaId ?: return
+                    model.currentPosition = newIndex.toInt()
+                    playListAdapter.submitList(model.getAdapterModels())
+
+                }
             })
         }
     }
