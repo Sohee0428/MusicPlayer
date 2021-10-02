@@ -86,7 +86,8 @@ class PlayerFragment: Fragment(R.layout.fragment_player) {
 
     private fun initRecyclerView(fragmentPlayerBinding: FragmentPlayerBinding) {
         playListAdapter = PlayListAdapter {
-//            todo 음악을 재생
+
+            playMusic(it)
         }
         fragmentPlayerBinding.playListRecyclerView.apply {
             adapter = playListAdapter
@@ -151,4 +152,15 @@ class PlayerFragment: Fragment(R.layout.fragment_player) {
         }
     }
 
+    private fun playMusic(musicModel: MusicModel) {
+        model.updateCurrentPosition(musicModel)
+        player?.seekTo(model.currentPosition, 0)
+        player?.play()
+    }
+
+    companion object {
+        fun newInstance(): PlayerFragment {
+            return PlayerFragment()
+        }
+    }
 }
