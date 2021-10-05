@@ -20,7 +20,6 @@
         android:visibility="visible"
         app:constraint_referenced_ids="titleTxt, playListRecyclerView, playListSeekBar" />
 
-
     <View
         android:id="@+id/topBackground"
         android:layout_width="0dp"
@@ -56,7 +55,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="애국가" />
-
 
     <TextView
         android:id="@+id/titleTxt"

@@ -21,7 +21,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
-class PlayerFragment: Fragment(R.layout.fragment_player) {
+class PlayerFragment : Fragment(R.layout.fragment_player) {
 
     private var binding: FragmentPlayerBinding? = null
     private lateinit var playListAdapter: PlayListAdapter
@@ -48,10 +48,11 @@ class PlayerFragment: Fragment(R.layout.fragment_player) {
     }
 
     private fun initSeekBar(fragmentPlayerBinding: FragmentPlayerBinding) {
-        fragmentPlayerBinding.playerSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) { }
+        fragmentPlayerBinding.playerSeekBar.setOnSeekBarChangeListener(object :
+            SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {}
 
-            override fun onStartTrackingTouch(seekBar: SeekBar?) { }
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
 
             override fun onStopTrackingTouch(seekBar: SeekBar) {
                 player?.seekTo((seekBar.progress * 1000).toLong())
@@ -64,10 +65,10 @@ class PlayerFragment: Fragment(R.layout.fragment_player) {
     }
 
     private fun initPlayControlBtn(fragmentPlayerBinding: FragmentPlayerBinding) {
-        fragmentPlayerBinding.playControlImg.setOnClickListener{
+        fragmentPlayerBinding.playControlImg.setOnClickListener {
             val player = this.player ?: return@setOnClickListener
 
-            if (player.isPlaying){
+            if (player.isPlaying) {
                 player.pause()
             } else {
                 player.play()
@@ -99,7 +100,7 @@ class PlayerFragment: Fragment(R.layout.fragment_player) {
                 override fun onIsPlayingChanged(isPlaying: Boolean) {
                     super.onIsPlayingChanged(isPlaying)
 
-                    if(isPlaying) {
+                    if (isPlaying) {
                         it.playControlImg.setImageResource(R.drawable.ic_baseline_pause_24)
                     } else {
                         it.playControlImg.setImageResource(R.drawable.ic_baseline_play_arrow_24)
@@ -111,7 +112,7 @@ class PlayerFragment: Fragment(R.layout.fragment_player) {
 
                     val newIndex = mediaItem?.mediaId ?: return
                     model.currentPosition = newIndex.toInt()
-                     updatePlayerView(model.currentMusicModel())
+                    updatePlayerView(model.currentMusicModel())
                     playListAdapter.submitList(model.getAdapterModels())
 
                 }
@@ -128,7 +129,7 @@ class PlayerFragment: Fragment(R.layout.fragment_player) {
     private fun updateSeek() {
         val player = this.player ?: return
         val duration = if (player.duration >= 0) player.duration else 0
-        val position =  player.currentPosition
+        val position = player.currentPosition
 
         updateSeekUi(duration, position)
 
@@ -144,17 +145,21 @@ class PlayerFragment: Fragment(R.layout.fragment_player) {
         binding?.let { binding ->
 
             binding.playListSeekBar.max = (duration / 1000).toInt()
-            binding.playListSeekBar.progress = (position/1000).toInt()
+            binding.playListSeekBar.progress = (position / 1000).toInt()
 
             binding.playerSeekBar.max = (duration / 1000).toInt()
-            binding.playerSeekBar.progress = (position/1000).toInt()
+            binding.playerSeekBar.progress = (position / 1000).toInt()
 
-            binding.playTimeTxt.text = String.format("%02d:%02d",
+            binding.playTimeTxt.text = String.format(
+                "%02d:%02d",
                 TimeUnit.MINUTES.convert(position, TimeUnit.MILLISECONDS),
-                    (position / 1000) % 60 )
-            binding.totalTimeTxt.text =String.format("%02d:%02d",
+                (position / 1000) % 60
+            )
+            binding.totalTimeTxt.text = String.format(
+                "%02d:%02d",
                 TimeUnit.MINUTES.convert(duration, TimeUnit.MILLISECONDS),
-                (duration / 1000) % 60 )
+                (duration / 1000) % 60
+            )
         }
     }
 
@@ -182,7 +187,7 @@ class PlayerFragment: Fragment(R.layout.fragment_player) {
     }
 
     private fun initPlayLIstBtn(fragmentPlayerBinding: FragmentPlayerBinding) {
-        fragmentPlayerBinding.playListImg.setOnClickListener{
+        fragmentPlayerBinding.playListImg.setOnClickListener {
 
             if (model.currentPosition == -1) return@setOnClickListener
 
@@ -202,14 +207,14 @@ class PlayerFragment: Fragment(R.layout.fragment_player) {
         retrofit.create(MusicService::class.java)
             .also {
                 it.listMusics()
-                    .enqueue(object : Callback<MusicDto>{
+                    .enqueue(object : Callback<MusicDto> {
                         override fun onResponse(
                             call: Call<MusicDto>,
                             response: Response<MusicDto>
                         ) {
                             Log.d("PlayerFragment", "${response.body()}")
 
-                            response.body()?.let {  musicDto ->
+                            response.body()?.let { musicDto ->
 
                                 model = musicDto.mapper()
 

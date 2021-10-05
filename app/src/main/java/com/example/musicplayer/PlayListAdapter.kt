@@ -38,7 +38,6 @@ class PlayListAdapter(private val callback: (MusicModel) -> Unit) :
                 callback(item)
             }
         }
-
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -53,7 +52,7 @@ class PlayListAdapter(private val callback: (MusicModel) -> Unit) :
         }
     }
 
-    companion object{
+    companion object {
         val diffUtil = object : DiffUtil.ItemCallback<MusicModel>() {
             override fun areItemsTheSame(oldItem: MusicModel, newItem: MusicModel): Boolean {
                 return oldItem.id == newItem.id
@@ -62,8 +61,6 @@ class PlayListAdapter(private val callback: (MusicModel) -> Unit) :
             override fun areContentsTheSame(oldItem: MusicModel, newItem: MusicModel): Boolean {
                 return oldItem == newItem
             }
-
         }
     }
-
 }
