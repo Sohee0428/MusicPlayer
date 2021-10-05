@@ -244,6 +244,22 @@ class PlayerFragment: Fragment(R.layout.fragment_player) {
         player?.play()
     }
 
+    override fun onStop() {
+        super.onStop()
+
+        player?.pause()
+        view?.removeCallbacks(updateSeekRunnable)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        binding = null
+        player?.release()
+        view?.removeCallbacks(updateSeekRunnable)
+
+    }
+
     companion object {
         fun newInstance(): PlayerFragment {
             return PlayerFragment()
