@@ -27,6 +27,9 @@ class PlayerFragment: Fragment(R.layout.fragment_player) {
     private lateinit var playListAdapter: PlayListAdapter
     private var player: SimpleExoPlayer? = null
     private var model: PlayerModel = PlayerModel()
+    private val updateSeekRunnable = Runnable {
+        updateSeek()
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -37,10 +40,27 @@ class PlayerFragment: Fragment(R.layout.fragment_player) {
         initPlayView(fragmentPlayerBinding)
         initPlayLIstBtn(fragmentPlayerBinding)
         initPlayControlBtn(fragmentPlayerBinding)
+        initSeekBar(fragmentPlayerBinding)
         initRecyclerView(fragmentPlayerBinding)
 
         getVideoListFromServer()
 
+    }
+
+    private fun initSeekBar(fragmentPlayerBinding: FragmentPlayerBinding) {
+        fragmentPlayerBinding.playerSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) { }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) { }
+
+            override fun onStopTrackingTouch(seekBar: SeekBar) {
+                player?.seekTo((seekBar.progress * 1000).toLong())
+            }
+        })
+
+        fragmentPlayerBinding.playListSeekBar.setOnTouchListener { v, event ->
+            false
+        }
     }
 
     private fun initPlayControlBtn(fragmentPlayerBinding: FragmentPlayerBinding) {
